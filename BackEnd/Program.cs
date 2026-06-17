@@ -11,6 +11,7 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using System.Text;
 using System.Text.Json.Serialization;
+using Npgsql;
 
 namespace BackEnd
 {
@@ -41,11 +42,28 @@ namespace BackEnd
 
 
 
-            // DB
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
                 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
                                        ?? builder.Configuration.GetConnectionString("local");
+
+                if (!string.IsNullOrEmpty(connectionString) && connectionString.StartsWith("postgres", StringComparison.OrdinalIgnoreCase))
+                {
+                    var uri = new Uri(connectionString);
+                    var userInfo = uri.UserInfo.Split(':');
+                    var npgsqlBuilder = new NpgsqlConnectionStringBuilder
+                    {
+                        Host = uri.Host,
+                        Port = uri.IsDefaultPort ? 5432 : uri.Port,
+                        Username = userInfo[0],
+                        Password = userInfo.Length > 1 ? userInfo[1] : "",
+                        Database = uri.LocalPath.TrimStart('/'),
+                        SslMode = SslMode.Prefer,
+                        TrustServerCertificate = true
+                    };
+                    connectionString = npgsqlBuilder.ToString();
+                }
+
                 options.UseNpgsql(connectionString);
             });
 
