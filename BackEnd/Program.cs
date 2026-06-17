@@ -44,7 +44,8 @@ namespace BackEnd
 
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
-                var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+                var connectionString = Environment.GetEnvironmentVariable("DATABASE_URL")
+                                       ?? builder.Configuration.GetConnectionString("DefaultConnection") 
                                        ?? builder.Configuration.GetConnectionString("local");
 
                 if (!string.IsNullOrEmpty(connectionString) && connectionString.StartsWith("postgres", StringComparison.OrdinalIgnoreCase))
@@ -169,11 +170,13 @@ namespace BackEnd
             }
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
             {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseCors("AllowAll");
 
