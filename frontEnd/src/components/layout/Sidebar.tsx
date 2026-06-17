@@ -13,7 +13,7 @@ const Sidebar = () => {
     navigate(url);
   };
 
-  const handleRoles = (role: string): boolean => user?.roles?.includes(role) ?? false;
+
 
   return (
     <div className='shrink-0 bg-[#754eb4] w-60 p-2 min-h-[calc(100vh-48px)] flex flex-col items-stretch gap-8'>
