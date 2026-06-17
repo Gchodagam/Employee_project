@@ -46,7 +46,7 @@ namespace BackEnd
             {
                 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
                                        ?? builder.Configuration.GetConnectionString("local");
-                options.UseSqlServer(connectionString);
+                options.UseNpgsql(connectionString);
             });
 
             // Dependency Injection
@@ -138,7 +138,7 @@ namespace BackEnd
                 try
                 {
                     var context = services.GetRequiredService<ApplicationDbContext>();
-                    context.Database.Migrate();
+                    context.Database.EnsureCreated();
                 }
                 catch (Exception ex)
                 {
