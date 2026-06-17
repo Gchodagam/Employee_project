@@ -54,7 +54,7 @@ namespace BackEnd
                     var npgsqlBuilder = new NpgsqlConnectionStringBuilder
                     {
                         Host = uri.Host,
-                        Port = uri.IsDefaultPort ? 5432 : uri.Port,
+                        Port = uri.Port > 0 ? uri.Port : 5432,
                         Username = userInfo[0],
                         Password = userInfo.Length > 1 ? userInfo[1] : "",
                         Database = uri.LocalPath.TrimStart('/'),
