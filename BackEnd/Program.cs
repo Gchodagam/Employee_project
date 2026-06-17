@@ -157,6 +157,9 @@ namespace BackEnd
                 {
                     var context = services.GetRequiredService<ApplicationDbContext>();
                     context.Database.EnsureCreated();
+
+                    var authService = services.GetRequiredService<IAuthService>();
+                    authService.SeedRolesAsync().Wait();
                 }
                 catch (Exception ex)
                 {
