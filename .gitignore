@@ -1,0 +1,10 @@
+.vs/
+bin/
+obj/
+Logs/
+*.mp4
+*.docx
+*.xlsx
+.dtbcache*
+.futdcache*
+.suo
