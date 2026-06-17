@@ -44,7 +44,8 @@ namespace BackEnd
             // DB
             builder.Services.AddDbContext<ApplicationDbContext>(options =>
             {
-                var connectionString = builder.Configuration.GetConnectionString("local");
+                var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+                                       ?? builder.Configuration.GetConnectionString("local");
                 options.UseSqlServer(connectionString);
             });
 
@@ -129,6 +130,22 @@ namespace BackEnd
             });
 
             var app = builder.Build();
+
+            // Apply database migrations automatically at startup
+            using (var scope = app.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+                try
+                {
+                    var context = services.GetRequiredService<ApplicationDbContext>();
+                    context.Database.Migrate();
+                }
+                catch (Exception ex)
+                {
+                    var logger = services.GetRequiredService<ILogger<Program>>();
+                    logger.LogError(ex, "An error occurred while migrating the database.");
+                }
+            }
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
