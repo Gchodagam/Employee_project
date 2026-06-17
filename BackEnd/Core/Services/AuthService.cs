@@ -40,31 +40,56 @@ namespace BackEnd.Core.Services
                 bool isManagerRoleExists = await _roleManager.RoleExistsAsync(StaticUserRoles.MANAGER);
                 bool isUserRoleExists = await _roleManager.RoleExistsAsync(StaticUserRoles.USER);
 
-                if (isOwnerRoleExists && isAdminRoleExists && isManagerRoleExists && isUserRoleExists)
-                    return new GeneralServiceResponseDto()
-                    {
-                        IsSucceed = true,
-                        StatusCode = 200,
-                        Message = "Roles Seeding is Already Done"
-                    };
+                if (!isOwnerRoleExists) await _roleManager.CreateAsync(new IdentityRole(StaticUserRoles.OWNER));
+                if (!isAdminRoleExists) await _roleManager.CreateAsync(new IdentityRole(StaticUserRoles.ADMIN));
+                if (!isManagerRoleExists) await _roleManager.CreateAsync(new IdentityRole(StaticUserRoles.MANAGER));
+                if (!isUserRoleExists) await _roleManager.CreateAsync(new IdentityRole(StaticUserRoles.USER));
 
-                await _roleManager.CreateAsync(new IdentityRole(StaticUserRoles.OWNER));
-                await _roleManager.CreateAsync(new IdentityRole(StaticUserRoles.ADMIN));
-                await _roleManager.CreateAsync(new IdentityRole(StaticUserRoles.MANAGER));
-                await _roleManager.CreateAsync(new IdentityRole(StaticUserRoles.USER));
+                // Seed Default Users
+                await SeedUserAsync("owner", "owner@example.com", "Password@123", "System", "Owner", StaticUserRoles.OWNER);
+                await SeedUserAsync("admin", "admin@example.com", "Password@123", "System", "Admin", StaticUserRoles.ADMIN);
+                await SeedUserAsync("manager", "manager@example.com", "Password@123", "System", "Manager", StaticUserRoles.MANAGER);
+                await SeedUserAsync("user", "user@example.com", "Password@123", "System", "User", StaticUserRoles.USER);
             }
             catch (Exception ex) 
             {
                 Serilog.Log.Error("Failure : {@RequestName} , {@Error} , {@DateTimeUTC}",
                             "SeedRolesAsync", ex.Message, DateTime.UtcNow);
+                return new GeneralServiceResponseDto()
+                {
+                    IsSucceed = false,
+                    StatusCode = 500,
+                    Message = "Error Seeding Roles and Users"
+                };
             }
 
             return new GeneralServiceResponseDto()
             {
                 IsSucceed = true,
                 StatusCode = 201,
-                Message = "Roles Seeding Done Successfully"
+                Message = "Roles and Users Seeding Done Successfully"
             };
+        }
+
+        private async Task SeedUserAsync(string userName, string email, string password, string firstName, string lastName, string role)
+        {
+            if (await _userManager.FindByNameAsync(userName) == null)
+            {
+                var user = new ApplicationUser
+                {
+                    UserName = userName,
+                    Email = email,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    SecurityStamp = Guid.NewGuid().ToString()
+                };
+                
+                var result = await _userManager.CreateAsync(user, password);
+                if (result.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(user, role);
+                }
+            }
         }
         #endregion
 
