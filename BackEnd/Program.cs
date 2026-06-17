@@ -56,8 +56,8 @@ namespace BackEnd
                     {
                         Host = uri.Host,
                         Port = uri.Port > 0 ? uri.Port : 5432,
-                        Username = userInfo[0],
-                        Password = userInfo.Length > 1 ? userInfo[1] : "",
+                        Username = Uri.UnescapeDataString(userInfo[0]),
+                        Password = userInfo.Length > 1 ? Uri.UnescapeDataString(string.Join(":", userInfo.Skip(1))) : "",
                         Database = uri.LocalPath.TrimStart('/'),
                         SslMode = SslMode.Prefer,
                         TrustServerCertificate = true

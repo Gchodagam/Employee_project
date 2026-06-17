@@ -1,4 +1,4 @@
-﻿using BackEnd.Core.Constants;
+using BackEnd.Core.Constants;
 using BackEnd.Core.Dtos.Auth;
 using BackEnd.Core.Dtos.General;
 using BackEnd.Core.Entities;
@@ -269,7 +269,12 @@ namespace BackEnd.Core.Services
             {
                 Serilog.Log.Error("Failure : {@RequestName} , {@Error} , {@DateTimeUTC}",
                     "RegisterAsync", ex.Message, DateTime.Today);
-                return null;
+                return new GeneralServiceResponseDto()
+                {
+                    IsSucceed = false,
+                    StatusCode = 500,
+                    Message = "Internal error: " + (ex.InnerException?.Message ?? ex.Message)
+                };
             }
 
             return new GeneralServiceResponseDto()
