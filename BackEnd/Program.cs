@@ -28,6 +28,17 @@ namespace BackEnd
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    policy =>
+                    {
+                        policy.AllowAnyOrigin()
+                              .AllowAnyMethod()
+                              .AllowAnyHeader();
+                    });
+            });
+
 
 
             // DB
@@ -126,13 +137,7 @@ namespace BackEnd
                 app.UseSwaggerUI();
             }
 
-            app.UseCors(options =>
-            {
-                options
-                .AllowAnyHeader()
-                .AllowAnyMethod()
-                .AllowAnyOrigin();
-            });
+            app.UseCors("AllowAll");
 
             app.UseHttpsRedirection();
 
