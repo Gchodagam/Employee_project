@@ -1,4 +1,4 @@
-﻿namespace BackEnd.Core.Dtos.Message
+namespace BackEnd.Core.Dtos.Message
 {
     public class GetMessageDto
     {
@@ -6,6 +6,7 @@
         public string SenderUserName { get; set; } = string.Empty;
         public string ReceiverUserName { get; set; } = string.Empty;
         public string Text { get; set; } = string.Empty;
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
+

@@ -1,4 +1,4 @@
-﻿using BackEnd.Core.DbContext;
+using BackEnd.Core.DbContext;
 using BackEnd.Core.Dtos.Log;
 using BackEnd.Core.Entities;
 using BackEnd.Core.Interfaces;
@@ -37,7 +37,7 @@ namespace BackEnd.Core.Services
             catch (Exception ex) 
             {
                 Serilog.Log.Error("Failure : {@RequestName} , {@Error} , {@DateTimeUTC}",
-                    "GetLogsAsync", ex.Message, DateTime.Today);
+                    "GetLogsAsync", ex.Message, DateTime.UtcNow);
                 return null;
             }
         }
@@ -63,7 +63,7 @@ namespace BackEnd.Core.Services
             catch(Exception ex) 
             {
                 Serilog.Log.Error("Failure : {@RequestName} , {@Error} , {@DateTimeUTC}",
-                    "GetMyLogsAsync", ex.Message, DateTime.Today);
+                    "GetMyLogsAsync", ex.Message, DateTime.UtcNow);
                 return null;
             }
         }
@@ -86,9 +86,10 @@ namespace BackEnd.Core.Services
             catch(Exception ex) 
             {
                 Serilog.Log.Error("Failure : {@RequestName} , {@Error} , {@DateTimeUTC}",
-                    "SaveNewLog", ex.Message, DateTime.Today);
+                    "SaveNewLog", ex.Message, DateTime.UtcNow);
             }
         }
         #endregion
     }
 }
+

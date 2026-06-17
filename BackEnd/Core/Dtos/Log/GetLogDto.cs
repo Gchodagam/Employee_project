@@ -1,9 +1,10 @@
-﻿namespace BackEnd.Core.Dtos.Log
+namespace BackEnd.Core.Dtos.Log
 {
     public class GetLogDto
     {
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public string? UserName { get; set; }
         public string Description { get; set; }
     }
 }
+

@@ -1,11 +1,12 @@
-﻿namespace BackEnd.Core.Entities
+namespace BackEnd.Core.Entities
 {
     public class BaseEntity<TID>
     {
         public TID Id { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         public bool IsActive { get; set; } = true;
         public bool IsDeleted { get; set; } = false;
     }
 }
+

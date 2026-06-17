@@ -56,7 +56,7 @@ namespace BackEnd.Core.Services
             catch (Exception ex) 
             {
                 Serilog.Log.Error("Failure : {@RequestName} , {@Error} , {@DateTimeUTC}",
-                            "SeedRolesAsync", ex.Message, DateTime.Today);
+                            "SeedRolesAsync", ex.Message, DateTime.UtcNow);
             }
 
             return new GeneralServiceResponseDto()
@@ -84,7 +84,7 @@ namespace BackEnd.Core.Services
             catch (Exception ex) 
             {
                 Serilog.Log.Error("Failure : {@RequestName} , {@Error} , {@DateTimeUTC}",
-                         "GetUserDetailsByUserNameAsync", ex.Message, DateTime.Today);
+                         "GetUserDetailsByUserNameAsync", ex.Message, DateTime.UtcNow);
 
                 return null;
             }
@@ -105,7 +105,7 @@ namespace BackEnd.Core.Services
             catch(Exception ex) 
             {
                 Serilog.Log.Error("Failure : {@RequestName} , {@Error} , {@DateTimeUTC}",
-                       "GetUsernamesListAsync", ex.Message, DateTime.Today);
+                       "GetUsernamesListAsync", ex.Message, DateTime.UtcNow);
 
                 return null;
             }
@@ -134,7 +134,7 @@ namespace BackEnd.Core.Services
             {
 
                 Serilog.Log.Error("Failure : {@RequestName} , {@Error} , {@DateTimeUTC}",
-                       "GetUsersListAsync", ex.Message, DateTime.Today);
+                       "GetUsersListAsync", ex.Message, DateTime.UtcNow);
 
                 return null;
             }
@@ -171,7 +171,7 @@ namespace BackEnd.Core.Services
             catch (Exception ex) 
             {
                 Serilog.Log.Error("Failure : {@RequestName} , {@Error} , {@DateTimeUTC}",
-                       "LoginAsync", ex.Message, DateTime.Today);
+                       "LoginAsync", ex.Message, DateTime.UtcNow);
 
                 return null;
             }
@@ -214,7 +214,7 @@ namespace BackEnd.Core.Services
             catch (Exception ex) 
             {
                 Serilog.Log.Error("Failure : {@RequestName} , {@Error} , {@DateTimeUTC}",
-                        "MeAsync", ex.Message, DateTime.Today);
+                        "MeAsync", ex.Message, DateTime.UtcNow);
                 return null;
             }
         }
@@ -268,7 +268,7 @@ namespace BackEnd.Core.Services
             catch (Exception ex) 
             {
                 Serilog.Log.Error("Failure : {@RequestName} , {@Error} , {@DateTimeUTC}",
-                    "RegisterAsync", ex.Message, DateTime.Today);
+                    "RegisterAsync", ex.Message, DateTime.UtcNow);
                 return new GeneralServiceResponseDto()
                 {
                     IsSucceed = false,
@@ -367,7 +367,7 @@ namespace BackEnd.Core.Services
             catch (Exception ex) 
             {
                 Serilog.Log.Error("Failure : {@RequestName} , {@Error} , {@DateTimeUTC}",
-                    "UpdateRoleAsync", ex.Message, DateTime.Today);
+                    "UpdateRoleAsync", ex.Message, DateTime.UtcNow);
                 return null;
             }
         }
@@ -397,8 +397,8 @@ namespace BackEnd.Core.Services
             var tokenObject = new JwtSecurityToken(
                 issuer: _configuration["JWT:ValidIssuer"],
                 audience: _configuration["JWT:ValidAudience"],
-                notBefore: DateTime.Now,
-                expires: DateTime.Now.AddHours(3),
+                notBefore: DateTime.UtcNow,
+                expires: DateTime.UtcNow.AddHours(3),
                 claims: authClaims,
                 signingCredentials: signingCredentials
                 );
@@ -426,3 +426,4 @@ namespace BackEnd.Core.Services
 
     }
 }
+
